@@ -14,7 +14,7 @@ UpdateBox()
 
 XtoolsArmv5()
 {
-   if [ ! -d x-tools ]; then 
+   if [ ! -d x-tools ]; then
          echo "-> Installing Cross Compiler ARMv5"
          echo "-> Downloading Cross Compiler ARMv5"
          wget -q http://archlinuxarm.org/builder/xtools/x-tools.tar.xz;
@@ -27,7 +27,7 @@ XtoolsArmv5()
 
 XtoolsArmv6()
 {
-   if [ ! -d x-tools6h ]; then 
+   if [ ! -d x-tools6h ]; then
          echo "-> Installing Cross Compiler ARMv6"
          echo "-> Downloading Cross Compiler ARMv6"
          wget -q http://archlinuxarm.org/builder/xtools/x-tools6h.tar.xz;
@@ -41,7 +41,7 @@ XtoolsArmv6()
 XtoolsArmv7()
 {
    pwd
-   if [ ! -d x-tools7h ]; then 
+   if [ ! -d x-tools7h ]; then
          echo "-> Installing Cross Compiler ARMv7"
          echo "-> Downloading Cross Compiler ARMv7"
          wget -q http://archlinuxarm.org/builder/xtools/x-tools7h.tar.xz;
@@ -55,14 +55,14 @@ XtoolsArmv7()
 DownloadNodeJS()
 {
    echo "-> Getting latest node.js version"
-   result=$(wget -qO- http://nodejs.org/dist/latest/ | egrep -o 'node-v[0-9\.]+.tar.gz' | tail -1)
+   result=$(wget -qO- http://nodejs.org/dist/v8.11.1/ | egrep -o 'node-v[0-9\.]+.tar.gz' | tail -1)
    tmp=$(echo $result | egrep -o 'node-v[0-9\.]+')
    mm=$(echo $result | egrep -o '[0-9\.]+')
    majorminor=${mm:0:${#mm} - 3} # chop 3 last chars
    version=${tmp:0:${#tmp} - 1}
    if [ ! -e $result ]; then
          echo "-> Downloading $result"
-         wget -q http://nodejs.org/dist/latest/$result
+         wget -q http://nodejs.org/dist/v8.11.1/$result
          echo "-> End of Download $result"
          tar xvzf $result
          ln -s $version node
@@ -129,8 +129,8 @@ BuildNodeJSArmv6()
 
 BuildNodeJSArmv7()
 {
-   export PATH=/home/vagrant/x-tools7h/arm-unknown-linux-gnueabi/bin:$PATH
-   export TOOL_PREFIX="arm-unknown-linux-gnueabi"
+   export PATH=/home/vagrant/x-tools7h/arm-unknown-linux-gnueabihf/bin:$PATH
+   export TOOL_PREFIX="arm-unknown-linux-gnueabihf"
    export CC="${TOOL_PREFIX}-gcc"
    export CXX="${TOOL_PREFIX}-g++"
    export AR="${TOOL_PREFIX}-ar"
@@ -139,13 +139,13 @@ BuildNodeJSArmv7()
    export CCFLAGS="-march=armv7-a -mtune=cortex-a8 -mfpu=vfp -mfloat-abi=hard -DUSE_EABI_HARDFLOAT"
    export CXXFLAGS="-march=armv7-a -mtune=cortex-a8 -mfpu=vfp -mfloat-abi=hard -DUSE_EABI_HARDFLOAT"
    export OPENSSL_armcap=7
-   export GYPFLAGS="-Darmeabi=hard -Dv8_use_arm_eabi_hardfloat=true -Dv8_can_use_vfp3_instructions=true -Dv8_can_use_vfp2_instructions=true -Darm7=1"  
+   export GYPFLAGS="-Darmeabi=hard -Dv8_use_arm_eabi_hardfloat=true -Dv8_can_use_vfp3_instructions=true -Dv8_can_use_vfp2_instructions=true -Darm7=1"
    export VFP3=on
    export VFP2=on
    PREFIX_DIR="/usr"
    sudo chown -R vagrant: /home/vagrant/
    cd /home/vagrant/node
-   ./configure --without-snapshot --without-ssl --dest-cpu=arm --dest-os=linux --prefix="${PREFIX_DIR}"
+   ./configure --cross-compiling --without-snapshot --without-npm --without-ssl --dest-cpu=arm --dest-os=linux --prefix="${PREFIX_DIR}"
    make -j 2
    sudo chown -R vagrant: /home/vagrant/
    make install DESTDIR=/tmp/installARMv7
@@ -155,15 +155,15 @@ BuildNodeJSArmv7()
    make clean
 }
 
-UpdateBox
+# UpdateBox
 DownloadNodeJS
-XtoolsArmv5
-BuildNodeJSArmv5
+# XtoolsArmv5
+# BuildNodeJSArmv5
+# cd /home/vagrant/
+# PATH="$OLDPATH"
+# XtoolsArmv6
+# BuildNodeJSArmv6
 cd /home/vagrant/
 PATH="$OLDPATH"
-XtoolsArmv6
-BuildNodeJSArmv6
-#cd /home/vagrant/
-#PATH="$OLDPATH"
-#XtoolsArmv7
-#BuildNodeJSArmv7
+XtoolsArmv7
+BuildNodeJSArmv7
