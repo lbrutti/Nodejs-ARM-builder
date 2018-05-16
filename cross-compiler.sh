@@ -145,7 +145,7 @@ BuildNodeJSArmv7()
    PREFIX_DIR="/usr"
    sudo chown -R vagrant: /home/vagrant/
    cd /home/vagrant/node
-   ./configure --cross-compiling --without-snapshot --without-npm --without-ssl --dest-cpu=arm --dest-os=linux --prefix="${PREFIX_DIR}"
+   ./configure --cross-compiling --without-snapshot --without-npm --without-ssl --without-intl --dest-cpu=arm --dest-os=linux --prefix="${PREFIX_DIR}"
    make -j 2
    sudo chown -R vagrant: /home/vagrant/
    make install DESTDIR=/tmp/installARMv7
